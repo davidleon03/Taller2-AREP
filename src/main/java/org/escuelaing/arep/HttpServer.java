@@ -56,18 +56,38 @@ public class HttpServer {
             path = datos[1].split(",")[1];
             String result = java.net.URLDecoder.decode(path, StandardCharsets.UTF_8);
             File archivo = new File(result+name);
-            System.out.println("como debe ir --- path "+result+name);
-            try {
+            System.out.println("PATH ----> "+result+name);
+            String extencion = name.split("\\.")[1];
+            System.out.println(name);
+            System.out.println(extencion);
+            if(name.split("\\.")[1].equals("png")){
                 String extension = "PNG";
                 BufferedImage image = ImageIO.read(archivo);
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 ByteArrayOutputStream ArrBytes = new ByteArrayOutputStream();
                 DataOutputStream writeimg = new DataOutputStream(clientSocket.getOutputStream());
                 ImageIO.write(image, extension, ArrBytes);
                 writeimg.writeBytes("HTTP/1.1 200 OK \r\n" + "Content-Type: image/png\r\n" + "\r\n");
                 writeimg.write(ArrBytes.toByteArray());
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else if(name.split("\\.")[1].equals("html")){
+                BufferedReader in_2 = new BufferedReader(new FileReader(archivo));
+                String outputLine;
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type:  text/html\r\n" + "\r\n" + lector(in_2);
+                out.println(outputLine);
+            }
+            else if(name.split("\\.")[1].equals("js")){
+                BufferedReader in_2 = new BufferedReader(new FileReader(archivo));
+                String outputLine;
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: application/javascript\r\n" + "\r\n" + lector(in_2);
+                out.println(outputLine);
+            }
+            else{
+                BufferedReader in_2 = new BufferedReader(new FileReader(archivo));
+                String outputLine;
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/css\r\n" + "\r\n" + lector(in_2);
+                out.println(outputLine);
             }
         }
 
@@ -87,7 +107,15 @@ public class HttpServer {
         outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type:  text/html\r\n" + "\r\n" + htmlForm();
         out.println(outputLine);
     }
-
+    public static StringBuilder lector(BufferedReader date) throws IOException {
+        StringBuilder cadena = new StringBuilder();
+        String line = null;
+        while ((line = date.readLine()) != null) {
+            //System.out.println("Imprime el Line "+line);
+            cadena.append(line);
+        }
+        return cadena;
+    }
     /**
      * Funcion generada para almacenar el HTML
      *
@@ -103,9 +131,9 @@ public class HttpServer {
                 "    </head>\n" +
                 "    <body>\n" +
                 "\n" +
-                "        <h1>Ingrese el Nombre y Path del archivo, separados por una ,</h1>\n" +
+                "        <h1>LECTOR DE ARCHIVOS</h1>\n" +
                 "        <form action=\"/hellopost\">\n" +
-                "            <label for=\"postname\">NOMBRE,PATH</label><br>\n" +
+                "            <label for=\"postname\">Ingrese de la sieguiente manera NOMBRE.(html, css, js, png),PATH</label><br><br><br>\n" +
                 "            <input type=\"text\" id=\"postname\" name=\"name\"><br><br>\n" +
                 "            <input type=\"button\" value=\"Submit\" onclick=\"loadPostMsg(postname)\">\n" +
                 "        </form>\n" +
