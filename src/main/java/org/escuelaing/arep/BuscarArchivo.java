@@ -24,6 +24,7 @@ public class BuscarArchivo
             for(File elemento : lista) {
                 if (elemento.isDirectory())  {
                     buscador(nombre, elemento);
+                    System.out.println("lo busca");
                 } else if (nombre.equalsIgnoreCase(elemento.getName()))
                 { archivoEncontrado = elemento; System.out.println("El Archivo ha sido encontrado.");}
             }
