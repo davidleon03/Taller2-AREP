@@ -107,6 +107,13 @@ public class HttpServer {
         outputLine = "HTTP/1.1 200 OK\r\n" + "Content-Type:  text/html\r\n" + "\r\n" + htmlForm();
         out.println(outputLine);
     }
+
+    /**
+     * Funcion para leer el archivo
+     * @param date
+     * @return StringBuilder
+     * @throws IOException
+     */
     public static StringBuilder lector(BufferedReader date) throws IOException {
         StringBuilder cadena = new StringBuilder();
         String line = null;
